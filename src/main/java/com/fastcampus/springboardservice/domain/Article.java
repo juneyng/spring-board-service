@@ -1,8 +1,8 @@
 package com.fastcampus.springboardservice.domain;
 
-import jakarta.persistence.Index;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
@@ -15,10 +15,18 @@ import java.time.LocalDateTime;
         @Index(columnList = "createdAt"),
         @Index(columnList = "createdBy")
 })
+@Entity
 public class Article {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private Long id;
-    private String title;
-    private String hashtag;
+
+    @Setter private String title;
+    @Setter private String content;
+
+    @Setter private String hashtag;
 
     private LocalDateTime createdAt;
     private String createdBy;
