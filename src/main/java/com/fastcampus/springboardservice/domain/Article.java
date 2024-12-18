@@ -5,8 +5,12 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Getter
 @ToString
@@ -24,14 +28,38 @@ public class Article {
 
     private Long id;
 
-    @Setter private String title;
-    @Setter private String content;
+    @Setter @Column(nullable = false) private String title;
+    @Setter @Column(nullable = false, length = 10000) private String content;
 
     @Setter private String hashtag;
 
-    @CreatedBy private LocalDateTime createdAt;
-    private String createdBy;
-    private LocalDateTime modifiedAt;
-    private String modifiedBy;
+    @CreatedDate @Column(nullable = false) private LocalDateTime createdAt;
+    @CreatedBy @Column(nullable = false, length = 100) private String createdBy;
+    @LastModifiedDate @Column(nullable = false) private LocalDateTime modifiedAt;
+    @LastModifiedBy @Column(nullable = false, length = 100) private String modifiedBy;
 
+
+    protected Article(){}
+
+    private Article(String title, String content, String hashtag) {
+        this.title = title;
+        this.content = content;
+        this.hashtag = hashtag;
+    }
+
+    public static Article of(String title, String content, String hashtag) {
+        return new Article(title,content,hashtag);
+    }
+
+    @Override
+    public boolean equals(Object o) { // 동등성 검사
+        if (this == o) return true;
+        if (!(o instanceof Article article)) return false;
+        return id != null && id.equals(article.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }
